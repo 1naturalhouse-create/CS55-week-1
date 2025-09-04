@@ -1,64 +1,33 @@
-// CS55.13 F25 Week02 Instructor Live
+// CS55-week-01
 
-// load the core node http module
-const http = require("http");
+//use http package (shared code) from node.js
+let myhttp = require("http");
 
-// load the core node filesystem (fs) module, using js promises instead of callbacks
-// a promise represents eventual completion of asynch operation and its result
-const fs = require('fs').promises;
+//use http [package createServer()
+// that runs a web server
+let myserver = myhttp.createServer(
+    // createServer() uses our function to run when a request comes in 
+    function( myrequest, myresponse){ 
+        console.log( myrequest.url);
+        let mytext;
+        if ( myrequest.url === '/hello'){
+            mytext = "hows it going...";
 
-// create a function to respond to http requests
-// special variable __dirname has absolute path of where node code is running
-// if fs.readFile() successful, it returns data 
-// use then() method to handle success - contents parameter contains HTML file data
-const requestListener = function (req, res) {
-  // output request url
-  console.log(req.url);
+        } else {
+            mytext = "who is this";
+        }
+        let mytext;
+        if ( myrequest.url === '/omg'){
+            mytext = "For Reals";
 
-  if (req.url === "/") {
-    // check request url, if root, return html file
-    fs.readFile(__dirname + "/page.html")
-      .then(contents => {
-        // set http response header entry
-        res.setHeader("Content-Type", "text/html; charset=UTF-8");
-        // return 200 OK http status code
-        res.writeHead(200);
-        // send back file contents + close response
-        res.end(contents);
-      });
-  } else {
-    // if request url not root, return json file
-    fs.readFile(__dirname + "/data.json")
-      .then(contents => {
-        // set http response header entry
-        res.setHeader("Content-Type", "application/json; charset=UTF-8");
-        // return 200 OK http status code
-        res.writeHead(200);
-        res.end(contents);
-      });
-
-  }
-
-};
-
-// create an http server instance
-const server = http.createServer(requestListener);
-
-// define the TCP port and IP address to tell our http server to listen to
-const host = "127.0.0.1"; // repl.it is going to override this from localhost to your workspace webview hostname URL
-const port = "8080"; // repl.it is going to override this to use port 443 (SSL)
-
-// call the listen() method to start listening to http requests
-server.listen(
-  port, host, () => {
-    console.log(`Server is running on http://${host}:${port}`);
-    // console.log("Server is running on http://" + host + ":" + port);
-  }
+        } else {
+            mytext = "Not for reals";
+        }
+       
+    }
 );
 
-// non-arrow function syntax of same code as lines 53-58 above
-/*
-server.listen(port, host, function() {
-  console.log(`Server is running on http://${host}:${port}`);
-});
-*/
+// ask http to start listening on a tcp for incoming http request comes in
+// listen() takes 2 args: 1: tcp port #, string of the ip address to listen ( 0.0.0.0)
+myserver.listen(8080,"127.0.0.1");
+ 
